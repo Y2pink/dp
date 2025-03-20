@@ -1,0 +1,896 @@
+/* 定义字符编码 */
+@charset "utf-8";
+/* 所有元素及其伪元素的盒模型设置为 border-box，清除内外边距，设置字体为微软雅黑 */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: "微软雅黑";
+}
+/* 设置页面主体的文字颜色、字体大小和背景图片 */
+body {
+    color: #fff;
+    font-size: 16px;
+    /* 背景图片自适应不同屏幕尺寸，不重复显示，固定在页面，居中对齐，并且自适应屏幕尺寸。 */
+    background: url(../images/bg.png) no-repeat fixed center center/cover;
+}
+/* 引入自定义字体 */
+@font-face {
+    font-family: electronicFont;
+    src: url(../font/DS-DIGIT.TTF);
+}
+/* 设置 HTML 和 body 元素的最小高度为 100% */
+html,
+body {
+    min-height: 100%;
+}
+/* 去除列表项的默认样式 */
+li {
+    list-style-type: none;
+}
+/* 去除图片的边框，设置图片最大宽度为 100% */
+img {
+    border: none;
+    max-width: 100%;
+}
+/* 去除链接的下划线，设置文字颜色为白色 */
+a {
+    text-decoration: none;
+    color: #fff;
+}
+/* 设置链接激活和聚焦时的样式，去除轮廓线和下划线 */
+a.active,
+a:focus {
+    outline: none!important;
+    text-decoration: none;
+}
+/* 清除列表、段落和标题的内外边距方便后续自定义布局。 */
+ol,
+ul,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    padding: 0;
+    margin: 0;
+}
+/* 设置链接鼠标悬停时的样式，改变文字颜色和去除下划线 */
+a:hover {
+    color: #06c;
+    text-decoration: none!important;
+}
+
+/* 清除浮动 */
+.clearfix::before,
+.clearfix::after {
+    content: " ";
+    display: table;
+}
+
+.clearfix::after {
+    clear: both;
+}
+
+/* 浮动和对齐类 */
+/* 左浮动类 */
+.pulll_left {
+    float: left;
+}
+/* 右对齐类，使用内联块元素和居中对齐 */
+.pulll_right {
+    display: inline-block;
+    justify-content: center;
+}
+/* 去除斜体样式，清除内外边距和缩进 */
+i {
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+    text-indent: 0;
+}
+/* 头部样式 */
+/* 设置头部的相对定位、高度、内外边距 */
+.head {
+    position: relative;
+    height: 90px;
+    margin: 0 15px;
+    padding-right: 60px;
+}
+/* 设置头部标题的字体大小、字母间距、居中对齐、行高和内边距 */
+.head h1 {
+    font-size: 30px;
+    letter-spacing: 12px;
+    text-align: center;
+    line-height: 90px;
+    padding-right: 100px;
+    color: #daf9ff;
+}
+/* 设置头部导航菜单的字体大小为 0，去除默认样式 */
+.head .menu ul {
+    font-size: 0;  
+}
+/* 设置头部导航菜单项的显示方式和相对定位 */
+.head .menu li {
+    display: inline-block;
+    position: relative;
+    margin: 30px 15px;
+}
+/* 设置头部导航菜单链接的显示方式、字体大小、文字颜色、行高和内边距 */
+.head .menu li a {
+    display: block;
+    font-size: 18px;
+    color: #fff;
+    line-height: 30px;
+    padding: 0 10px;
+    position: relative;
+}
+/* 设置头部时间显示的绝对定位、行高和对齐方式 */
+.head .time {
+    position: absolute;
+    right: 0; /*靠右对齐 */
+    line-height: 90px;
+    top: 0;
+}
+
+/* 菜单边框样式 */
+/* 设置导航菜单项和链接的四个角的边框样式，包括宽度、高度、透明度和圆角 */
+.menu li::before,
+.menu li::after,
+.menu li a::before,
+.menu li a::after {
+    position: absolute;
+    width: 10px;
+    height: 5px;
+    opacity: 0.4;
+    content: "";
+    border-radius: 2px;
+}
+/* 设置导航菜单项和链接左上角的边框样式，包括左边框和上边框 */
+.menu li::before,
+.menu li a::before {
+    border-left: 2px solid #02a6b5;
+    border-top: 2px solid #02a6b5;
+    left: -1px;
+    top: -1px;
+}
+/* 设置导航菜单项和链接右下角的边框样式，包括右边框和下边框 */
+.menu li::after,
+.menu li a::after {
+    border-right: 2px solid #02a6b5;
+    border-bottom: 2px solid #02a6b5;
+    right: -1px;
+    bottom: -1px;
+}
+/* 设置导航菜单链接鼠标悬停时的文字颜色 */
+.head .menu li a:hover {
+    color: #f4e925;
+}
+/* 设置导航菜单链接和菜单项鼠标悬停时的边框颜色和透明度 */
+/* .menu li a:hover::before,
+.menu li a:hover::after,
+.menu li:hover::before,
+.menu li:hover::after {
+    border-color: #f4e925;
+    opacity: 1;
+} */
+
+/* 主体内容区域样式 */
+/* 设置主体内容区域的内边距 */
+.mainbox {
+    padding: 0 10px;
+}
+/* 设置导航列表的左右外边距 */
+.nav1 {
+    margin-left: -6px;
+    margin-right: -6px;
+}
+/* 设置导航列表项的左右内边距和左浮动 */
+.nav1>li {
+    padding: 0 6px;
+    float: left;
+}
+/* 设置盒子模块的边框、阴影和底部边距 */
+.box {
+     border: 1px solid rgba(7, 118, 181, 0.5);/*1px 宽的半透明边框 */
+    box-shadow: inset 0 0 10px rgba(7, 118, 181, 0.4);
+    margin-bottom: 12px;/* 内阴影效果 */
+    position: relative;
+}
+
+/* 标题样式 */
+/* 设置标题的相对定位、字体大小和粗细 */
+.tit,
+.tit01 {
+    position: relative;
+    font-size: 16px;
+    font-weight: 500;
+}
+/* 设置 tit 类标题的内边距和底部边框 */
+.tit {
+    padding: 10px 10px 10px 25px;
+    border-bottom: 1px solid rgba(7, 118, 181, 0.7);
+}
+/* 设置标题前面的小圆点样式，包括位置、大小、背景颜色、阴影和圆角 */
+.tit::before,
+.tit01::before {
+    position: absolute;
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: rgba(22, 214, 255, 0.9);
+    box-shadow: 0 0 5px rgba(22, 214, 255, 0.9);
+    border-radius: 10px;
+}
+/* 设置 tit 类标题前面小圆点的位置 */
+.tit::before {
+    left: 10px;
+    top: 18px;
+}
+/* 设置 tit 类标题底部的渐变线条样式，包括宽度、高度、位置、背景颜色和阴影 */
+.tit::after,
+.tit::after,
+.box::before {
+    width: 100%;
+    height: 1px;
+    content: "";
+    position: absolute;
+    left: 0;
+     background: linear-gradient(to right, #076ead, #4ba6e0, #076ead);/*渐变线条 */
+    box-shadow: 0 0 5px rgba(131, 189, 227, 1);
+    opacity: 0.6;
+}
+/* 设置 tit 类标题底部渐变线条的位置 */
+.tit::after {
+    bottom: -1px;
+}
+/* 设置盒子模块顶部的渐变线条位置 */
+.box::before {
+    top: -1px;
+}
+/* 设置 tit01 类标题的内边距 */
+.tit01 {
+    padding-left: 15px;
+}
+/* 设置 tit01 类标题前面小圆点的位置 */
+.tit01::before {
+    left: 3px;
+    top: 8px;
+}
+
+/* 子容器样式 */
+/* 清除子容器的浮动 */
+.boxnav {
+    overflow: hidden; /* 清除浮动 */
+    
+}
+/* 设置子区域的盒模型，确保宽度包含边框和内边距 */
+.sub-region {
+    box-sizing: border-box; /* 确保宽度包含边框和内边距 */
+}
+/* 地图相关样式 */
+/* 设置地图容器的背景图片 */
+.mapc {
+    background: url(../images/bg3.png) no-repeat center center/100% 100%;
+}
+/* 设置地图导航的绝对定位和层级 */
+.map {
+    position: relative;
+    height: 100%;
+}
+/* 设置地图导航的绝对定位和层级 */
+.mapnav {
+    position: absolute;
+    z-index: 10;
+}
+
+/* 数据列表样式 */
+
+/* 文件导入区域按钮样式 */
+/* 设置文件导入区域按钮的显示方式、
+宽度、底部边距、内边距、背景颜色、文字颜色、边框和圆角 */
+.boxnav button {
+    /* 将按钮设置为块级元素，独占一行 */
+    display: block;
+    /* 按钮宽度占父容器的100% */
+    width: 100%;
+    /* 按钮底部外边距为10px，用于垂直分隔按钮 */
+    margin-bottom: 10px;
+    /* 按钮内边距，上下8px，左右12px，增加点击区域 */
+    padding: 8px 12px;
+    /* 按钮背景颜色为半透明蓝色 */
+    background-color: rgba(7, 118, 181, 0.5);
+    /* 按钮文字颜色为白色 */
+    color: white;
+    /* 去除按钮默认边框 */
+    border: none;
+    /* 按钮边角设置为4px圆角，外观更圆润 */
+    border-radius: 4px;
+    /* 鼠标悬停时光标变为手型，提示可点击 */
+    cursor: pointer;
+}
+
+/* 
+功能总结：定义.boxnav内按钮鼠标悬停时的样式，增强交互效果。
+*/
+.boxnav button:hover {
+    /* 鼠标悬停时按钮背景颜色变为不透明度为0.8的蓝色 */
+    background-color: rgba(7, 118, 181, 0.8);
+}
+
+/* 
+功能总结：定义文件上传项的样式，使其具有良好的布局和视觉效果。
+*/
+.file-upload-item {
+    /* 使用Flexbox布局，方便子元素排列和对齐 */
+    display: flex;
+    /* 子元素在垂直方向上居中对齐 */
+    align-items: center;
+    /* 背景颜色为白色 */
+    background-color: #fff;
+    /* 内边距为10px */
+    padding: 10px;
+    /* 底部外边距为10px，用于分隔相邻文件上传项 */
+    margin-bottom: 10px;
+    /* 边角设置为4px圆角 */
+    border-radius: 4px;
+    /* 鼠标悬停时光标变为手型 */
+    cursor: pointer;
+    /* 添加轻微阴影效果，增强立体感 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* 
+功能总结：定义文件标签的文字样式。
+*/
+.file-label {
+    /* 文件标签文字颜色为深灰色 */
+    color: #333;
+    /* 文字大小为14px */
+    font-size: 14px;
+}
+
+/* 
+功能总结：定义进度条容器的样式，包括大小、背景、圆角和阴影等。
+*/
+#progress-bar {
+    /* 进度条宽度为760px */
+    width: 760px;
+    /* 进度条高度为20px */
+    height: 20px;
+    /* 进度条背景颜色为浅灰色 */
+    background-color: #e0e0e0;
+    /* 进度条边角设置为25px圆角，呈现椭圆形 */
+    border-radius: 25px;
+    /* 添加阴影效果，增强立体感 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* 相对定位，为子元素绝对定位提供参考 */
+    position: relative;
+    /* 隐藏溢出进度条容器的内容 */
+    overflow: hidden;
+}
+
+/* 
+功能总结：定义已完成进度条的样式，包括背景、定位和布局等。
+*/
+#completed {
+    /* 已完成进度条高度占父容器的100% */
+    height: 100%;
+    /* 边角设置为25px圆角，与进度条容器保持一致 */
+    border-radius: 25px;
+    /* 已完成进度条使用从左到右的渐变背景颜色 */
+    background: linear-gradient(to right, #00bfff, #1e90ff);
+    /* 绝对定位，相对于父容器#progress-bar进行定位 */
+    position: absolute;
+    /* 定位在父容器的左上角 */
+    top: 0;
+    left: 0;
+    /* 使用Flexbox布局 */
+    display: flex;
+    /* 子元素在垂直和水平方向上都居中对齐 */
+    align-items: center;
+    justify-content: center;
+}
+
+/* 
+功能总结：定义已完成进度百分比文字的样式。
+*/
+#completed-text {
+    /* 已完成进度百分比文字颜色为白色 */
+    color: white;
+    /* 文字大小为12px */
+    font-size: 12px;
+    /* 设置层级为2，确保文字显示在已完成进度条之上 */
+    z-index: 2;
+}
+
+/* 
+功能总结：定义下拉菜单容器的样式，为下拉菜单的布局提供基础。
+*/
+.dropdown {
+    /* 相对定位，为下拉菜单内容的绝对定位提供参考 */
+    position: relative;
+    /* 以行内块元素形式显示 */
+    display: inline-block;
+    /* 下拉菜单容器宽度为200px */
+    width: 200px;
+}
+
+/* 
+功能总结：定义下拉按钮的样式，包括外观、布局和交互效果。
+*/
+.dropdown-btn {
+    /* 按钮背景透明 */
+    background-color: transparent;
+    /* 按钮文字颜色为白色 */
+    color: white;
+    /* 内边距为10px */
+    padding: 10px;
+    /* 文字大小为14px，字体为Arial */
+    font-size: 14px;
+    font-family: Arial;
+    /* 按钮有1px宽的白色边框 */
+    border: 1px solid white;
+    /* 鼠标悬停时光标变为手型 */
+    cursor: pointer;
+    /* 按钮边角设置为10px圆角 */
+    border-radius: 10px;
+    /* 按钮宽度占父容器的100% */
+    width: 100%;
+    /* 文字左对齐 */
+    text-align: left;
+    /* 使用Flexbox布局 */
+    display: flex;
+    /* 子元素在水平方向上两端对齐，垂直方向上居中对齐 */
+    justify-content: space-between;
+    align-items: center;
+    /* 背景颜色变化有0.3秒的过渡效果 */
+    transition: background-color 0.3s ease;
+}
+
+/* 
+功能总结：定义下拉按钮鼠标悬停时的样式，增强交互效果。
+*/
+.dropdown-btn:hover {
+    /* 鼠标悬停时按钮背景颜色变为半透明的白色 */
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 
+功能总结：使用伪元素为下拉按钮添加倒三角图标。
+*/
+.dropdown-btn::after {
+    /* 伪元素内容为空 */
+    content: "";
+    /* 设置边框样式，形成倒三角形状 */
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    /* 以行内块元素形式显示 */
+    display: inline-block;
+    /* 内边距为3px */
+    padding: 3px;
+    /* 将倒三角旋转45度 */
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    /* 倒三角靠右对齐 */
+    margin-left: auto;
+}
+
+/* 
+功能总结：定义下拉菜单内容的样式，默认隐藏。
+*/
+.dropdown-content {
+    /* 下拉菜单内容默认隐藏 */
+    display: none;
+    /* 绝对定位，相对于父容器.dropdown进行定位 */
+    position: absolute;
+    /* 背景颜色为半透明的黑色 */
+    background-color: rgba(0, 0, 0, 0.3);
+    /* 最小宽度为父容器宽度 */
+    min-width: 100%;
+    /* 添加阴影效果 */
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    /* 设置层级为1 */
+    z-index: 1;
+    /* 边角设置为10px圆角 */
+    border-radius: 10px;
+    /* 隐藏溢出内容 */
+    overflow: hidden;
+}
+
+/* 
+功能总结：定义下拉菜单选项的样式，包括文字、内边距和过渡效果。
+*/
+.dropdown-content a {
+    /* 下拉菜单选项文字颜色为白色 */
+    color: white;
+    /* 内边距为10px */
+    padding: 10px;
+    /* 去除链接下划线 */
+    text-decoration: none;
+    /* 以块级元素形式显示，使选项占满一行 */
+    display: block;
+    /* 文字大小为14px，字体为Arial */
+    font-size: 14px;
+    font-family: Arial;
+    /* 背景颜色变化有0.3秒的过渡效果 */
+    transition: background-color 0.3s ease;
+}
+
+/* 
+功能总结：定义下拉菜单选项鼠标悬停时的样式，增强交互效果。
+*/
+.dropdown-content a:hover {
+    /* 鼠标悬停时选项背景颜色变为半透明的深蓝色 */
+    background-color: rgba(0, 31, 63, 0.8);
+}
+
+/* 
+功能总结：用于控制下拉菜单内容的显示，添加.show类时显示为块级元素。
+*/
+.show {
+    /* 显示为块级元素 */
+    display: block;
+}
+
+       
+        /* 新增iframe全屏样式 */
+        .screen-container {
+            /* 固定定位，相对于浏览器窗口进行定位 */
+            position: fixed;
+            /* 顶部距离窗口顶部1px */
+            top: 1px;
+            /* 覆盖整个浏览器窗口 */
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* 设置层级为998 */
+            z-index: 998;
+            /* 默认隐藏 */
+            display: none;
+        }
+        
+        /* 
+        功能总结：定义全屏iframe的样式，使其占满全屏容器。
+        */
+        .screen-iframe {
+            /* iframe宽度占满父容器.screen-container */
+            width: 100%;
+            /* iframe高度占满父容器.screen-container */
+            height: 100%;
+            /* 去除iframe的默认边框 */
+            border: none;
+            /* 背景颜色为白色 */
+            background: #fff;
+        }
+        
+        /* 显示隐藏控制 */
+        .mainbox.hidden {
+            display: none;
+        }
+        /* 提升导航菜单层级 */
+        .head {
+            z-index: 999;
+            position: relative;
+            
+        }
+  /* 头部样式 */
+  .head {
+    /* 设置层级为999，确保头部显示在其他元素之上 */
+    z-index: 999;
+    /* 相对定位 */
+    position: relative;
+    /* 左右外边距为15px */
+    margin: 0 15px;
+    /* 右内边距为60px */
+    padding-right: 60px;
+}
+
+/* 
+功能总结：定义头部内部容器的样式，使用Flexbox布局实现子元素垂直居中。
+*/
+.head-inner {
+    /* 使用Flexbox布局 */
+    display: flex;
+    /* 子元素在垂直方向上居中对齐 */
+    align-items: center;
+    /* 宽度和高度占满父容器.head */
+    width: 100%;
+    height: 100%;
+}
+
+/* 
+功能总结：定义头部标题的样式，包括文字大小、颜色和间距。
+*/
+.head h1 {
+    /* 标题文字大小为30px */
+    font-size: 30px;
+    /* 字母间距为12px */
+    letter-spacing: 12px;
+    /* 标题文字颜色为浅蓝色 */
+    color: #daf9ff;
+    /* 标题左侧外边距为15px，与导航菜单之间添加间距 */
+    margin-left: 15px;
+}
+
+/* 
+功能总结：将头部菜单列表的字体大小设置为0，去除列表项之间的间隙。
+*/
+.head .menu ul {
+    /* 字体大小设置为0 */
+    font-size: 0;
+}
+
+/* 
+功能总结：定义头部菜单列表项的样式，包括显示方式、定位和间距。
+*/
+.head .menu li {
+    /* 菜单列表项以行内块元素形式显示 */
+    display: inline-block;
+    /* 相对定位 */
+    position: relative;
+    /* 去除上下外边距 */
+    margin: 0;
+    /* 右侧外边距为15px，为菜单列表项之间添加间距 */
+    margin-right: 15px;
+}
+
+/* 
+功能总结：将文字缩进-9999px，使文字在页面上不可见，但保留其语义。
+*/
+.text {
+    /* 文字缩进-9999px */
+    text-indent: -9999px;
+}
+
+/* 
+功能总结：定义.menu2且具有.pulll_left类的元素样式，使其左对齐且不被压缩。
+*/
+.menu2.pulll_left {
+    /* 右侧外边距自动扩展，使菜单左对齐 */
+    margin-right: auto;
+    /* 防止菜单在空间不足时被压缩 */
+    flex-shrink: 0;
+}
+/* 
+功能总结：定义模态框的样式，默认隐藏，作为遮罩层覆盖整个页面。
+*/
+.modal {
+    /* 模态框默认隐藏 */
+    display: none;
+    /* 固定定位，相对于浏览器窗口进行定位 */
+    position: fixed;
+    /* 设置层级为1000，确保模态框显示在其他元素之上 */
+    z-index: 1000;
+    /* 覆盖整个浏览器窗口 */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /* 当内容超出模态框高度时，显示滚动条 */
+    overflow: auto;
+    /* 背景颜色为半透明的黑色，作为遮罩层 */
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* 
+功能总结：定义模态框内容的样式，包括背景、边距、大小和定位。
+*/
+.modal-content {
+    /* 模态框内容背景颜色为深蓝色 */
+    background-color: #1f2836;
+    /* 模态框内容在垂直方向上距离顶部5%，水平方向上居中 */
+    margin: 5% auto;
+    /* 内边距为20px */
+    padding: 20px;
+    /* 模态框内容有1px宽的边框 */
+    border: 1px solid #3a4659;
+    /* 宽度占浏览器窗口的80%，最大宽度为1200px，最小高度为600px */
+    width: 80%;
+    max-width: 1200px;
+    min-height: 600px;
+    /* 相对定位 */
+    position: relative;
+}
+
+/* 
+功能总结：定义模态框关闭按钮的样式，包括文字颜色、大小和浮动。
+*/
+.close {
+    /* 关闭按钮文字颜色为浅灰色 */
+    color: #aaa;
+    /* 关闭按钮靠右浮动 */
+    float: right;
+    /* 关闭按钮文字大小为28px */
+    font-size: 28px;
+    /* 关闭按钮文字加粗 */
+    font-weight: bold;
+}
+
+/* 
+功能总结：定义模态框关闭按钮鼠标悬停或聚焦时的样式，增强交互效果。
+*/
+.close:hover,
+.close:focus {
+    /* 鼠标悬停或聚焦时文字颜色变为白色 */
+    color: white;
+    /* 去除下划线 */
+    text-decoration: none;
+    /* 光标变为手型 */
+    cursor: pointer;
+}
+
+/* 
+功能总结：定义报告标题的样式，包括文字对齐、边距和颜色。
+*/
+.report-title {
+    /* 报告标题文字居中对齐 */
+    text-align: center;
+    /* 标题底部外边距为30px */
+    margin-bottom: 30px;
+    /* 标题文字颜色为浅蓝色 */
+    color: #daf9ff;
+}
+
+/* 
+功能总结：定义报告部分之间的间距样式。
+*/
+.report-section {
+    /* 报告部分之间的底部外边距为40px，用于分隔不同的报告部分 */
+    margin-bottom: 40px;
+}
+
+/* 
+功能总结：定义报告部分标题的样式，包括文字颜色、边框和边距。
+*/
+.report-section h3 {
+    /* 报告部分标题文字颜色为浅蓝色 */
+    color: #07e5ff;
+    /* 标题底部有2px宽的边框 */
+    border-bottom: 2px solid #3a4659;
+    /* 标题底部内边距为8px */
+    padding-bottom: 8px;
+    /* 标题底部外边距为15px */
+    margin-bottom: 15px;
+}
+
+/* 
+功能总结：定义报告数据的样式，包括行高、文字颜色和换行处理。
+*/
+.report-data {
+    /* 报告数据文字行高为1.8，增加可读性 */
+    line-height: 1.8;
+    /* 报告数据文字颜色为浅蓝灰色 */
+    color: #c3d4eb;
+    /* 保留换行符，使文本中的换行符在页面上生效 */
+    white-space: pre - line;
+}
+/* 定义.screen-switch类的样式，该类通常用于包裹包含按钮组和标题的整个导航区域 */
+.screen-switch {
+    /* 使用相对定位，为子元素的绝对定位提供参考 */
+    position: relative;
+    /* 设置元素宽度为其父元素宽度的 100% */
+    width: 100%;
+    /* 使用 Flexbox 布局，使子元素可以水平排列并灵活控制对齐方式 */
+    display: flex;
+    /* 让子元素在水平方向上两端对齐，中间留出空白 */
+    justify-content: space-between;
+    /* 使子元素在垂直方向上居中对齐 */
+    align-items: center;
+    /* 设置元素的内边距，上和下为 10px，左和右为 20px */
+    padding: 10px 20px;
+    height: 90px;
+}
+
+/* 定义.button-group类的样式，该类用于包裹一组按钮，方便统一管理按钮布局 */
+.button-group {
+    /* 使用 Flexbox 布局，使按钮可以水平排列 */
+    display: flex;
+    /* 设置按钮之间的间距为 12px */
+    gap: 12px;
+    /* 使按钮在垂直方向上居中对齐 */
+    align-items: center;
+}
+
+/* 定义.switch-btn类的样式，该类用于设置切换按钮的通用样式 */
+.switch-btn {
+    /* 将按钮以行内弹性盒子的形式显示，允许它与其他元素在同一行显示且具有弹性布局特性 */
+    display: inline-flex;
+    /* 使按钮内的内容在垂直方向上居中对齐 */
+    align-items: center;
+    /* 设置按钮的内边距，上和下为 8px，左和右为 20px */
+    padding: 8px 24px;
+    /* 设置按钮的边框圆角为 20px，使按钮边角更圆润 */
+    border-radius: 20px;
+
+    /* 设置按钮内文字的颜色 */
+    color: #c3d4eb;
+    /* 去除按钮作为超链接时的下划线 */
+    text-decoration: none;
+    /* 为按钮的所有属性变化添加过渡效果，过渡时间为 0.3 秒，过渡方式为缓动 */
+    transition: all 0.3s ease;
+    /* 设置按钮的边框，宽度为 1px，实线，颜色为 #475467 */
+    border: 1px solid #475467;
+    /* 设置按钮内文字的字体大小为 14px */
+    font-size: 14px;
+    background: transparent;
+
+   
+    box-shadow: none;
+}
+
+/* 定义.switch-btn类在鼠标悬停时的样式 */
+.switch-btn:hover {
+    /* 鼠标悬停时，改变按钮的背景颜色 */
+
+    /* 鼠标悬停时，按钮在垂直方向上向上移动 2px，产生浮动效果 */
+    transform: translateY(-2px);
+    /* 鼠标悬停时，为按钮添加阴影效果，使其更具立体感 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+ 
+    background: transparent !important;
+  
+}
+
+/* 定义.switch-btn类的伪元素样式，通常用于处理按钮前的图标样式 */
+.switch-btn::before {
+    /* 设置图标与按钮文字之间的右边距为 8px */
+    margin-right: 4px;
+    /* 设置图标文字的字体大小为 16px */
+    font-size: 16px;
+}
+
+/* 响应式调整，当屏幕宽度最大为 768px 时应用以下样式，用于适配小屏幕设备 */
+@media (max-width: 768px) {
+    /* 当屏幕宽度小于等于 768px 时，调整.switch-btn类的样式 */
+    .switch-btn {
+        /* 减小按钮的内边距，上和下为 6px，左和右为 12px */
+        padding: 6px 12px;
+        /* 减小按钮内文字的字体大小为 12px */
+        font-size: 12px;
+    }
+    /* 当屏幕宽度小于等于 768px 时，调整.switch-btn类伪元素的样式 */
+    .switch-btn::before {
+        /* 减小图标文字的字体大小为 14px */
+        font-size: 14px;
+    }
+}
+/* 新增居中标题样式 */
+.center-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #c3d4eb;
+    font-size: 24px;
+    white-space: nowrap;
+    pointer-events: none; /* 防止点击事件干扰按钮 */
+}
+@media (max-width: 768px) {
+    /* 在小屏幕设备上应用的样式 */
+   .mainbox ul li {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+   .boxnav {
+        width: 100%;
+    }
+   .dropdown-content {
+        width: 100%;
+    }
+}.mainbox ul {
+    display: flex;
+    flex-wrap: wrap;
+}img,
+video {
+    width: 100%;
+    height: auto;
+}body {
+    font-size: 16px;
+}
+h1 {
+    font-size: 2em; /* 相对于body的字体大小 */
+}

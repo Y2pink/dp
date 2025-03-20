@@ -1,0 +1,1059 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>车辆钢板检测</title>
+    <!-- 引入相关的JavaScript文件 -->
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/echarts.min.js"></script>
+    <script type="text/javascript" src="js/js.js"></script>
+    
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pizzip@3.0.6/dist/pizzip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docxtemplater@3.28.1/build/docxtemplater.min.js"></script>
+  
+<!-- 
+    <script type="text/javascript" src="js/china.js"></script>
+    <script type="text/javascript" src="js/map.js"></script>
+        <script type="text/javascript" src="js/area_echarts.js"></script> -->
+  <!-- 引入CSS样式文件 -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+    
+        /* 定义一个容器类，用于水平和垂直居中内容 */
+       .pulll {
+            position: static;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        /* 主标题样式，使其水平居中 */
+        #main-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+
+        /* 路径显示容器样式，包含边框、圆角和内边距 */
+       .path-display-container {
+            margin-top: 15px;
+            border: 1px solid #3a4659;
+            border-radius: 4px;
+            padding: 10px;
+            height: calc(100% - 60px);
+        }
+
+        /* 路径框样式，设置背景色和圆角 */
+       .path-box {
+            margin-bottom: 10px;
+            background: #2a3546;
+            border-radius: 3px;
+            padding: 8px;
+        }
+
+        /* 路径标题样式，设置字体颜色和大小 */
+       .path-title {
+            color: #7d8da5;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        /* 路径内容样式，设置字体颜色、大小、最大高度和滚动条 */
+       .path-content {
+            color: #c3d4eb;
+            font-size: 13px;
+            max-height: 120px;
+            overflow-y: auto;
+            white-space: nowrap;
+            padding: 5px;
+            border: 1px solid #364152;
+            background: #1f2836;
+        }
+
+        /* 通用按钮样式，设置内边距、圆角和鼠标指针样式 */
+       .file-btn,
+       .camera-btn,
+       .detect-btn,
+       .close-camera-btn,
+       .simulate-btn {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        /* 文件选择按钮样式，设置背景色和字体颜色 */
+       .file-btn {
+            background: #3a4659;
+            color: #fff;
+        }
+
+        /* 文件选择按钮悬停样式，改变背景色和位置 */
+       .file-btn:hover {
+            background: #4a5669;
+            transform: translateY(-1px);
+        }
+
+        /* 摄像头按钮样式，设置背景色和字体颜色 */
+       .camera-btn {
+            background: #3a4659;
+            color: #fff;
+        }
+ /* 定义按钮组样式 */
+ .button-group {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        /* 定义按钮通用样式 */
+       .camera-container button {
+            padding: 1px 2px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            transition: background-color 0.3s ease;
+            width: 120px;
+        }
+
+        /* 鼠标悬停时按钮样式 */
+       .camera-container button:hover {
+            background-color: #0056b3;
+        }
+        /* 摄像头按钮悬停样式，改变背景色和位置 */
+       .camera-btn:hover {
+            background: #4a5669;
+            transform: translateY(-1px);
+        }
+
+        /* 检测按钮样式，设置背景色和字体颜色 */
+       .detect-btn {
+            background: #4CAF50;
+            color: white;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        /* 检测按钮悬停样式，改变背景色和位置 */
+       .detect-btn:hover {
+            background: #45a049;
+            transform: translateY(-1px);
+        }
+
+        /* 关闭摄像头按钮样式，设置背景色和字体颜色 */
+       .close-camera-btn {
+            background: #f44336;
+            color: white;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        /* 关闭摄像头按钮悬停样式，改变背景色和位置 */
+       .close-camera-btn:hover {
+            background: #d32f2f;
+            transform: translateY(-1px);
+        }
+ /* 摄像头容器样式，默认隐藏 */
+ .camera-container {
+            display:  none;
+            flex-direction: column;
+            align-items: center;
+        }
+        /* 摄像头视频样式，设置宽度和高度自适应 */
+       .camera-video {
+            width: 50%;
+            height: 20%;
+            object-fit: contain;
+        }
+
+        /* 模拟按钮样式，设置背景色和字体颜色 */
+       .simulate-btn {
+            background: #3a87ad;
+            color: white;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        /* 模拟按钮悬停样式，改变背景色和位置 */
+       .simulate-btn:hover {
+            background: #2d6987;
+            transform: translateY(-1px);
+        }
+
+       /* 下拉菜单容器样式，设置相对定位 */
+       .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* 下拉菜单按钮样式 */
+       .dropdown-btn {
+            background: #3a4659;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        /* 下拉菜单按钮悬停样式，改变背景色 */
+       .dropdown-btn:hover {
+            background: #4a566986;
+        }
+
+        /* 下拉菜单内容样式，设置绝对定位、背景色、最小宽度和阴影 */
+       .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #396ebe7c;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        /* 下拉菜单选项样式，设置字体颜色、内边距和文本装饰 */
+       .dropdown-content a {
+            color: #c3d4eb;
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* 下拉菜单选项悬停样式，改变背景色 */
+       .dropdown-content a:hover {
+            background-color: #3a4659;
+        }
+/* 新增多选样式 */
+.multiselect {
+    position: relative;
+    width: 100%;
+}
+
+.selected-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 5px;
+    background: #2a3546;
+    border-radius: 4px;
+    min-height: 36px;
+}
+
+.selected-tag {
+    background: #3a4659;
+    color: #c3d4eb;
+    padding: 3px 8px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+}
+
+.selected-tag span {
+    margin-right: 5px;
+}
+
+.selected-tag button {
+    background: none;
+    border: none;
+    color: #ff6b6b;
+    cursor: pointer;
+    padding: 0 3px;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.option-item:hover {
+    background: #3a4659;
+}
+
+.option-item input {
+    margin-right: 8px;
+    accent-color: #4CAF50;
+}
+        /* 头部样式，设置相对定位、边距和z-index */
+       .head {
+            position: relative;
+            margin: 0 15px;
+            padding-right: 60px;
+            z-index: 999; /* 确保头部元素的 z-index 值低于模态框 */
+        }
+
+       
+        /* 检测结果容器样式，设置边距、边框、圆角和背景色 */
+       .result-container {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #3a4659;
+            border-radius: 4px;
+            background: #1f2836;
+            height: auto;
+            display: none; /* 初始隐藏检测结果 */
+        }
+
+        /* 检测结果项样式，设置字体颜色和边距 */
+       .result-item {
+            color: #c3d4eb;
+            margin-bottom: 5px;
+        }
+
+
+        /* 进度阶段文本样式，设置字体颜色、大小和边距 */
+       .progress-stage {
+            color: #c3d4eb;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* 进度条完成部分内部文本样式，设置居中对齐 */
+        #completed {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+    height: 100%;
+    transition: width 0.5s ease-in-out;
+        }.stage-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    white-space: nowrap;
+}/* 历史记录进度文字 */
+.history-item .stage-text {
+    font-size: 12px;
+    color: rgba(255,255,255,0.9);
+}
+
+        /* 进度条阶段文本样式，设置字体颜色和大小 */
+        #stageText {
+            color: white;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        /* 报告模态框样式，默认隐藏，覆盖整个页面 */
+       .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        /* 报告模态框内容样式，设置背景色、边距、内边距、边框和宽度 */
+       .modal-content {
+            background-color: #1f2836;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #3a4659;
+            width: 80%;
+            max-width: 1200px;
+            min-height: 600px;
+            position: relative;
+        }
+
+        /* 关闭模态框按钮样式，设置字体颜色、大小、浮动和z-index */
+       .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            z-index: 1001; /* 确保关闭按钮层级高于模态框 */
+            position: relative;
+            pointer-events: auto; /* 确保按钮可点击 */
+        }
+
+        /* 关闭模态框按钮悬停样式，改变字体颜色和文本装饰 */
+       .close:hover,
+       .close:focus {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* 报告标题样式，设置居中对齐和字体颜色 */
+       .report-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #daf9ff;
+        }
+
+        /* 报告章节样式，设置底部边距 */
+       .report-section {
+            margin-bottom: 40px;
+        }
+
+        /* 报告章节标题样式，设置字体颜色、底部边框和内边距 */
+       .report-section h3 {
+            color: #07e5ff;
+            border-bottom: 2px solid #3a4659;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+
+        /* 报告数据样式，设置行高、字体颜色和换行方式 */
+       .report-data {
+            line-height: 1.8;
+            color: #c3d4eb;
+            white-space: pre-line;
+        }
+
+     
+
+        /* 下载按钮样式，设置背景色、字体颜色、边框、内边距、边距和圆角 */
+       .download-buttons button {
+            background-color: #3a4659;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin-left: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* 下载按钮悬停样式，改变背景色 */
+       .download-buttons button:hover {
+            background-color: #4a5669;
+        }
+        /* 历史记录容器样式 */
+.history-list-container {
+    height: 100%;
+    overflow-y: auto;
+    padding: 5px;
+    background: #1f2836;
+    border: 1px solid #3a4659;
+    border-radius: 4px;
+}
+
+/* 单条历史记录样式 */
+.history-item {
+    padding: 8px;
+    margin-bottom: 5px;
+    background: #2a3546;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.3s;
+
+    position: relative;
+    overflow: hidden;
+}
+.progress-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: #4CAF50;
+    transition: width 0.3s ease;
+}
+
+.history-item:hover {
+    background: #3a4659;
+}
+
+.history-item .time {
+    color: #7d8da5;
+    font-size: 12px;
+}
+
+.history-item .defect-type {
+    color: #c3d4eb;
+    font-size: 14px;
+    margin: 3px 0;
+}
+
+.history-item .confidence {
+    color: #4CAF50;
+    font-size: 12px;
+}
+/* 视频按钮样式（保持与其他按钮一致） */
+.file-btn[for="videoInput"] {
+    background: #3a4659;
+    color: #fff;
+}
+
+.file-btn[for="videoInput"]:hover {
+    background: #4a5669;
+    transform: translateY(-1px);
+}
+
+/* 视频文件图标样式 */
+.file-item .file-icon[data-type="video"] {
+    color: #ff6b6b; /* 红色强调视频文件 */
+}.download-buttons {
+    position: absolute;
+    top: 10px;
+    left: 10px;  /* 从 right 改为 left */
+    display: flex;
+    gap: 8px;     /* 添加按钮间距 */
+}
+
+.close {
+    right: 20px;  /* 确保关闭按钮保持在右侧 */
+    left: auto;   /* 清除默认左侧定位 */
+} /* 添加过渡动画 */
+#mainContainer {
+    transition: all 0.3s ease-in-out;
+}
+
+.fullscreen-mode .boxnav {
+    transition: height 0.3s ease;
+}
+#progress-bar {
+    width: calc(100% - 120px); /* 调整宽度，留出按钮空间 */
+    background-color: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+#completed {
+    width: 0%;
+    height: 20px;
+    background-color: #4CAF50;
+    text-align: center;
+    line-height: 20px;
+    color: white;
+    border-radius: 5px;
+    transition: width 0.5s ease; /* 添加过渡效果 */
+}    
+#folderPathBox, #fileListBox {
+    display: none;
+}
+.file-upload-group {
+    display: flex;
+    flex-direction: column;
+}
+.progress-bar-container {
+    width: 100%;
+    background-color: #f3f3f3;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.progress-bar {
+    height: 20px;
+    background-color: #4CAF50;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 20px;
+    color: white;
+}s
+    </style>
+
+</head>
+
+<body>
+
+    <!-- 修改后的标题结构 -->
+<div class="screen-switch">
+    <div class="button-group" >
+        <a href="index1.html" class="switch-btn">🔍 检测视图</a>
+        <a href="index2.html" class="switch-btn">📊 数据大屏</a>
+        <button id="generateReportBtn" class="switch-btn">📄 生成报告</button>
+    </div>
+    <h1 class="center-title">车辆钢板检测</h1>
+</div>
+    <!-- 主内容容器 -->
+    <div class="mainbox">
+        <!-- 无序列表，用于布局页面内容，clearfix 类可能用于清除浮动，nav1 类用于样式设置 -->
+        <ul class="clearfix nav1">
+            <!-- 列表项，设置宽度为 22% -->
+            <li style="width: 22%">
+                <!-- 盒子容器 -->
+                <div class="box">
+                    <!-- 嵌套的盒子容器 -->
+                    <div class="box">
+                        <!-- 标题容器，显示文件导入相关的标题 -->
+                        <div class="tit">文件导入</div>
+                        <!-- 盒子导航容器，高度自动适应内容 -->
+                        <div class="boxnav" style="height: 230px;">
+                           <!-- 修改后的文件导入模块 -->
+<div class="file-upload-group" id="fileUploadGroup">
+    <!-- 原有文件选择按钮 -->
+    <input type="file" id="singleFileInput" hidden>
+    <label for="singleFileInput" class="file-btn">📄 选择文件</label>
+ 
+    <!-- 原有文件夹选择按钮 -->
+    <input type="file" id="folderInput" webkitdirectory directory multiple hidden>
+    <label for="folderInput" class="file-btn">📂 选择文件夹</label>
+     
+    <!-- 新增视频选择按钮 -->
+    <input type="file" id="videoInput" accept="video" hidden>
+    <label for="videoInput" class="file-btn">🎥 选择视频</label>
+      <!-- 一个用于打开摄像头的按钮，图标为相机图标，id 为 'cameraBtn' -->
+      <button class="camera-btn" id="cameraBtn">📷 打开摄像头</button>
+</div>
+ <!-- 新增路径显示框 -->
+ <div class="path-display-container">
+    <div class="path-box" id="folderPathBox">
+        <div class="path-title">当前文件夹：</div>
+        <div class="path-content" id="folderPath"></div>
+    </div>
+    <div class="path-box" id="fileListBox">
+        <div class="path-title">包含文件：</div>
+        <div class="path-content" id="fileList"></div>
+    </div>
+</div>
+                        </div>
+                    </div>
+
+                   <!--   <div class="box">
+                       <div class="tit">目标选择</div>
+                        <div class="boxnav" style="height: 210px;">
+                           
+                        </div>
+                    </div> -->
+                </div>
+               <!-- 这是一个盒子容器，用于包裹检测结果相关的内容 -->
+<div class="box">
+    <!-- 该 div 用于显示“检测结果”这个标题 -->
+    <div class="tit">检测结果</div>
+    <!-- 这个 div 作为盒子的导航区域，目前 id 为空，高度设置为 170px，之后可能会用于显示具体的检测结果 -->
+    <div class="boxnav" id="" style="height: 270px;"></div>
+</div>
+</li>
+
+<!-- 这是另一个列表项，宽度设置为占父容器的 56% -->
+<li style="width: 56%">
+    <!-- 同样是一个盒子容器 -->
+    <div class="box">
+        <!-- 此 div 为盒子的导航区域，添加了'mapc'类，设置了高度、宽度和相对定位，可能用于放置地图或其他特定布局的内容 -->
+        <div class="boxnav mapc" style="height: 400px; width: 1000px; position: relative">
+            <!-- 内部的一个 div，设置了固定的宽度和高度 -->
+            <div style="width:76%; height: 99%;">
+          
+                <!-- 这是一个下拉菜单容器，通过 CSS 和 JavaScript 可以实现下拉效果 -->
+                <div class="dropdown">
+                    <div class="multiselect">
+                        <div class="selected-items" id="selectedItems"></div>
+                        <button class="dropdown-btn">选择检测类型（可多选）</button>
+                    </div>
+                    <div class="dropdown-content">
+                        <label class="option-item">
+                            <input type="checkbox" value="1"> 1
+                        </label>
+                        <label class="option-item">
+                            <input type="checkbox" value="2"> 2
+                        </label>
+                        <label class="option-item">
+                            <input type="checkbox" value="3"> 3
+                        </label>
+                        <label class="option-item">
+                            <input type="checkbox" value="4"> 4
+                        </label>
+                        <label class="option-item">
+                            <input type="checkbox" value="5"> 5
+                        </label>
+                        <label class="option-item">
+                            <input type="checkbox" value="6"> 6
+                        </label>
+                    </div>
+                </div>
+              
+                <!-- 摄像头相关的容器，初始可能是隐藏的，当点击打开摄像头按钮后会显示 -->
+                <div class="camera-container" id="cameraContainer">
+                    <!-- 视频元素，用于显示摄像头捕获的画面，设置了自动播放和静音属性，id 为 'cameraVideo' -->
+                    <video class="camera-video" id="cameraVideo" autoplay muted></video>
+                    <!-- 开始检测的按钮，初始状态为禁用，当满足一定条件（如摄像头已打开）后会变为可用，id 为 'detectBtn' -->
+                    <div class="button-group">
+                        <!-- 开始检测的按钮，初始状态为禁用，当满足一定条件（如摄像头已打开）后会变为可用，id 为 'detectBtn' -->
+                        <button class="detect-btn" id="detectBtn" disabled>🔍 开始检测</button>
+                        <!-- 关闭摄像头的按钮，点击后会停止摄像头捕获并隐藏相关界面，id 为 'closeCameraBtn' -->
+                        <button class="close-camera-btn" id="closeCameraBtn">❌ 关闭摄像头</button>
+                        <!-- 手动模拟采集数据的按钮，点击后可能会模拟检测过程，id 为 'simulateBtn' -->
+                        <button class="simulate-btn" id="simulateBtn">🔄 手动模拟采集</button>
+                 
+                        <div></div>
+                    </div>
+                    <!-- 检测结果的容器，初始可能是隐藏的，检测完成后会显示具体的检测结果 -->
+                    <div class="result-container" id="resultContainer">
+                        <!-- 检测状态的显示项，包含提示文本和一个用于显示具体状态的 span 元素，初始显示“未检测” -->
+                        <div class="result-item">检测状态：<span id="statusText">未检测</span></div>
+                        <!-- 缺陷类型的显示项，包含提示文本和一个用于显示具体缺陷类型的 span 元素，初始显示“无” -->
+                        <div class="result-item">缺陷类型：<span id="defectType">无</span></div>
+                        <!-- 置信度的显示项，包含提示文本和一个用于显示具体置信度的 span 元素，初始显示“0%” -->
+                        <div class="result-item">置信度：<span id="confidence">0%</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   <!-- 历史记录模块 -->
+   <div class="box">
+    <div class="tit">历史记录</div>
+    <div class="boxnav" style="height: 170px;">
+        <div class="history-list-container">
+            <div class="history-list" id="historyList"></div>
+        </div>
+    </div>
+    <div style="display: flex; align-items: center;">
+        <button id="clearHistoryBtn">清空历史</button>
+        <!-- 进度条容器 -->
+        <div id="progress-bar">
+    <div id="completed">
+        <span id="stageText" class="stage-text"></span>
+    </div>
+</div>
+    </div>
+
+</div>    
+</li>
+
+            <li style="width: 22%">
+                <div class="box">
+                    <div class="tit">合格率</div>
+                    <div class="boxnav" style="height: 320px;" id="echart5">
+                        <div class="yqlist"></div>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="tit">缺陷分类</div>
+                    <div class="boxnav" style="height: 230px;" id="echart8"></div>
+                </div>
+               
+            </li>
+        </ul>
+
+        <!-- 报告生成模态框 -->
+        <div id="reportModal" class="modal">
+            <div class="modal-content">
+                <div class="download-buttons">
+                    <button id="downloadPDF">下载 PDF</button>
+                    <button id="downloadJPG">下载 JPG</button>
+                    <button id="downloadWord">下载 Word</button>
+                </div>
+                <span class="close">&times;</span>
+                <h2 class="report-title">车辆钢板缺陷检测报告</h2>
+                <div class="report-section">
+                    <h3>基本信息</h3>
+                    <div class="report-data" id="basicInfo"></div>
+                </div>
+
+                <div class="report-section">
+                    <h3>检测结果</h3>
+                    <div class="report-data" id="detectionResult"></div>
+                </div>
+
+                <div class="report-section">
+                    <h3>产生原因</h3>
+                    <div class="report-data" id="causeAnalysis"></div>
+                </div>
+
+                <div class="report-section">
+                    <h3>建议模块</h3>
+                    <div class="report-data" id="suggestions"></div>
+                </div>
+            </div>
+        </div>
+
+    <script>
+        // 在全局作用域添加状态变量
+let isDetecting = false;
+let totalTests = 0;
+let passedTests = 0;
+let defectCounts = {
+    '表面划痕': 0,
+    '孔洞': 0,
+    '裂纹': 0,
+    '无缺陷': 0
+};
+/* 
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     echarts_2();
+        // });
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     echarts_3();
+        // });
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     echarts_4();
+        // }); */
+        document.addEventListener('DOMContentLoaded', function () {
+            echarts_5();
+        });
+        /* document.addEventListener('DOMContentLoaded', function () {
+            echarts_6();
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            echarts_7();
+        }); */
+        document.addEventListener('DOMContentLoaded', function () {
+            echarts_8();
+        });
+    </script>
+    <!-- 在原有HTML结构保持不变的基础上，仅修改script部分 -->
+<script src="js/jquery.js"></script>
+
+<script>
+$(function() {
+    // 全局状态
+    const state = {
+        videoStream: null,
+        selectedDefects: new Set(),
+        history: [],
+        isDetecting: false
+    };
+
+    // ============== 初始化检测类型选择 ==============
+    // 动态生成检测选项
+    const defects = ['表面划痕', '孔洞', '裂纹', '氧化斑', '压痕', '折皱'];
+    $('.dropdown-content').html(
+        defects.map((defect, index) => `
+            <label class="option-item">
+                <input type="checkbox" value="${index + 1}">
+                ${index + 1}. ${defect}
+            </label>`
+        ).join('')
+    );
+
+    // 选择检测类型
+    $('.dropdown-content').on('change', 'input', function() {
+        const value = $(this).val();
+        const text = $(this).parent().text().split('. ')[1];
+        
+        if ($(this).prop('checked')) {
+            state.selectedDefects.add({ value, text });
+        } else {
+            state.selectedDefects.delete([...state.selectedDefects].find(d => d.value === value));
+        }
+        updateSelectedDisplay();
+    });
+
+    // 更新已选标签显示
+    function updateSelectedDisplay() {
+        $('#selectedItems').html(
+            [...state.selectedDefects].map(d => `
+                <div class="selected-tag">
+                    <span>${d.text}</span>
+                    <button class="remove-tag" data-value="${d.value}">×</button>
+                </div>`
+            ).join('')
+        );
+    }
+
+    // 移除标签
+    $('#selectedItems').on('click', '.remove-tag', function() {
+        const value = $(this).data('value');
+        state.selectedDefects.delete([...state.selectedDefects].find(d => d.value === value));
+        $(`input[value="${value}"]`).prop('checked', false);
+        $(this).parent().remove();
+    });
+
+    // ============== 文件上传功能 ==============
+    $('input[type="file"]').change(function() {
+        const files = $(this).prop('files');
+        const isFolder = $(this).attr('id') === 'folderInput';
+        
+        if (isFolder && files.length) {
+            const path = files[0].webkitRelativePath.split('/')[0];
+            $('#folderPath').html(`📁 ${path}`);
+            $('#folderPathBox').show();
+        }
+
+        $('#fileList').html(
+            [...files].map(f => `
+                <div class="file-item">
+                    <span class="file-icon">${$(this).attr('id') === 'videoInput' ? '🎥' : '📄'}</span>
+                    ${f.name} (${(f.size/1024).toFixed(1)}KB)
+                </div>`
+            ).join('')
+        );
+    });
+
+    // ============== 摄像头控制 ==============
+    $('#cameraBtn').click(async function() {
+        try {
+            state.videoStream = await navigator.mediaDevices.getUserMedia({
+                video: { width: 1280, height: 720 }
+            });
+            $('#cameraVideo').prop('srcObject', state.videoStream);
+            $('#cameraContainer').show();
+            $('#detectBtn').prop('disabled', false);
+        } catch (error) {
+            alert(`摄像头错误: ${error.message}`);
+        }
+    });
+
+    $('#closeCameraBtn').click(function() {
+        state.videoStream?.getTracks().forEach(track => track.stop());
+        $('#cameraVideo').prop('srcObject', null);
+        $('#cameraContainer').hide();
+        $('#detectBtn').prop('disabled', true);
+        $('#statusText').text('未检测');
+        $('#defectType').text('无');
+        $('#confidence').text('0%');
+    });
+
+    // ============== 检测流程 ==============
+    $('#detectBtn').click(async function() {
+        if (!state.selectedDefects.size) return alert('请选择检测类型');
+        state.isDetecting = true;
+        
+        const stages = [
+            { progress: 20, stage: '图像采集中...' },
+            { progress: 40, stage: '分析中...' },
+            { progress: 60, stage: '缺陷识别...' },
+            { progress: 80, stage: '生成报告...' },
+            { progress: 100, stage: '完成检测' }
+        ];
+
+        for (const { progress, stage } of stages) {
+            if (!state.isDetecting) break;
+            $('#completed').css('width', progress + '%');
+            $('#stageText').text(stage);
+            await new Promise(r => setTimeout(r, 1000));
+        }
+
+        // 生成随机结果
+        const result = {
+            timestamp: new Date().toLocaleString(),
+            defectType: [...state.selectedDefects][Math.floor(Math.random() * state.selectedDefects.size)].text,
+            confidence: Math.floor(Math.random() * 100)
+        };
+
+        // 更新界面
+        $('#defectType').text(result.defectType);
+        $('#confidence').text(result.confidence + '%');
+        $('.result-container').show();
+
+        // 更新历史记录
+        state.history.unshift(result);
+        updateHistory();
+    });
+
+    // ============== 历史记录 ==============
+    function updateHistory() {
+        $('#historyList').html(
+            state.history.map((item, index) => `
+                <div class="history-item" data-index="${index}">
+                    <div class="time">${item.timestamp}</div>
+                    <div class="defect-type">${item.defectType}</div>
+                    <div class="confidence">${item.confidence}%</div>
+                </div>`
+            ).join('')
+        );
+    }
+
+    $('#clearHistoryBtn').click(function() {
+        state.history = [];
+        updateHistory();
+    });
+
+    // ============== 报告生成 ==============
+    $('#generateReportBtn').click(function() {
+        const passCount = state.history.filter(h => h.defectType === '无缺陷').length;
+        const total = state.history.length || 1;
+        
+        $('#basicInfo').html(`
+            检测时间: ${new Date().toLocaleString()}<br>
+            总检测次数: ${total}<br>
+            检测类型: ${[...state.selectedDefects].map(d => d.text).join(', ') || '无'}
+        `);
+
+        $('#detectionResult').html(`
+            合格率: ${(passCount / total * 100).toFixed(1)}%<br>
+            主要缺陷: ${[...state.selectedDefects][0]?.text || '无'}
+        `);
+
+        $('#reportModal').show();
+    });
+
+    $('.close, #reportModal').click(function(e) {
+        if ($(e.target).is('#reportModal, .close')) {
+            $('#reportModal').hide();
+        }
+    });
+
+    // ============== 下载功能 ==============
+    $('#downloadPDF').click(async function() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const element = document.getElementById('reportModal');
+        
+        const canvas = await html2canvas(element, { scale: 2 });
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210; // A4宽度210mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        doc.save('检测报告.pdf');
+    });
+
+    $('#downloadJPG').click(async function() {
+        const element = document.getElementById('reportModal');
+        const canvas = await html2canvas(element, { scale: 2 });
+        const link = document.createElement('a');
+        link.download = '检测报告.jpg';
+        link.href = canvas.toDataURL('image/jpeg', 0.9);
+        link.click();
+    });
+
+    $('#downloadWord').click(async function() {
+        try {
+            const response = await fetch('report_template.docx');
+            const arrayBuffer = await response.arrayBuffer();
+            
+            const zip = new PizZip(arrayBuffer);
+            const doc = new docxtemplater().loadZip(zip);
+            
+            const reportData = {
+                date: new Date().toLocaleString(),
+                defects: [...state.selectedDefects].map(d => d.text),
+                history: state.history.slice(0, 5)
+            };
+
+            doc.setData(reportData);
+            doc.render();
+
+            const out = doc.getZip().generate({ type: 'blob' });
+            const link = document.createElement('a');
+            link.download = '检测报告.docx';
+            link.href = URL.createObjectURL(out);
+            link.click();
+        } catch (error) {
+            alert('报告生成失败: ' + error.message);
+        }
+    });
+});
+$(document).ready(function() {
+            // 点击下拉菜单按钮时，切换下拉菜单内容的显示与隐藏状态
+            $('.dropdown-btn').click(function(e) {
+                e.stopPropagation(); // 阻止事件冒泡
+                $('.dropdown-content').toggle();
+            });
+
+            // 点击页面其他地方时，关闭下拉菜单
+            $(document).click(function() {
+                $('.dropdown-content').hide();
+            });
+
+            // 阻止点击下拉菜单内容时关闭菜单
+            $('.dropdown-content').click(function(e) {
+                e.stopPropagation();
+            });
+        });
+</script>
